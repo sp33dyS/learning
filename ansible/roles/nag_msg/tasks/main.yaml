@@ -1,0 +1,14 @@
+---
+- name: Remove subscription msg
+  block:
+    - name: Create no-nag-script
+      copy:
+        dest: /etc/apt/apt.conf.d/no-nag-script
+        content: |
+          DPkg::Post-Invoke { "dpkg -V proxmox-widget-toolkit | grep -q '/proxmoxlib\.js$'; if [ $? -eq 1 ]; then { echo 'Removing subscription nag from UI...'; sed -i '/.*data\.status.*{/{s/\!//;s/active/NoMoreNagging/}' /usr/share/javascript/proxmox-widget-toolkit/proxmoxlib.js; }; fi"; };
+      register: nag
+
+    - name: Reinstall proxmox-widget-toolkit package
+      shell: apt --reinstall install proxmox-widget-toolkit
+      when: nag.changed
+      

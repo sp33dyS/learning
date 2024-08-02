@@ -1,0 +1,5 @@
+---
+- name: Reboot machine
+  reboot:
+    msg: "Rebooting machine in 5 seconds"
+    

@@ -1,0 +1,32 @@
+---
+- name: Enable pve-ha-lrm, pve-ha-crm, and corosync services
+  systemd:
+    name: '{{ item }}'
+    enabled: yes
+  with_items:
+    - pve-ha-lrm
+    - pve-ha-crm
+    - corosync
+  when: high_availability == 1
+  register: services
+
+- name: Disable pve-ha-lrm, pve-ha-crm, and corosync services
+  systemd:
+    name: '{{ item }}'
+    enabled: no
+  with_items:
+    - pve-ha-lrm
+    - pve-ha-crm
+    - corosync
+  when: high_availability == 0
+  register: services
+
+- name: Restart pve-ha-lrm, pve-ha-crm, and corosync services
+  systemd:
+    name: '{{ item }}'
+    state: restarted
+  with_items:
+    - pve-ha-lrm
+    - pve-ha-crm
+    - corosync
+  when: services.changed

@@ -1,0 +1,12 @@
+---
+- name: Initial Proxmox config after installation
+  hosts: proxmox
+  #become: true
+
+  roles:
+    - sources
+    - nag_msg
+    - high_availability
+    - upgrade
+    - reboot
+    
