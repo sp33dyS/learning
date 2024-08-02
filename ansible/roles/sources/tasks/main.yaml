@@ -1,35 +1,19 @@
 ---
-- name: Remove PVE-ENTERPRISE repository
-  block:
-    - name: Backup ceph.list file
-      copy:
-        remote_src: true
-        src: /etc/apt/sources.list.d/ceph.list
-        dest: /etc/apt/sources.list.d/ceph.list_bak
-      register: ceph
+- name: Disable CEPH repository
+  lineinfile:
+    dest: /etc/apt/sources.list.d/ceph.list
+    regexp: '(?i)^(deb.*)'
+    line: '# \1'
+    backrefs: yes
+    state: present
 
-    - name: Remove ceph.list file
-      file:
-        path: /etc/apt/sources.list.d/ceph.list
-        state: absent
-      when: ceph.changed
-  ignore_errors: true
-
-- name: Remove CEPH repository
-  block:
-    - name: Backup pve-enterprise.list file
-      copy:
-        remote_src: true
-        src: /etc/apt/sources.list.d/pve-enterprise.list
-        dest: /etc/apt/sources.list.d/pve-enterprise.list_bak
-      register: pve_sub
-
-    - name: Remove pve-enterprise.list file
-      file:
-        path: /etc/apt/sources.list.d/pve-enterprise.list
-        state: absent
-      when: pve_sub.changed
-  ignore_errors: true
+- name: Disable PVE-ENTERPRISE repository
+  lineinfile:
+    dest: /etc/apt/sources.list.d/pve-enterprise.list
+    regexp: '(?i)^(deb.*)'
+    line: '# \1'
+    backrefs: yes
+    state: present
 
 - name: Add PVE-NO-SUBSCRIPTION repository
   apt_repository:
