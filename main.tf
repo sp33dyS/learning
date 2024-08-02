@@ -9,7 +9,7 @@ terraform {
 
 provider "proxmox" {
   # url is the hostname (FQDN if you have one) for the proxmox host you'd like to connect to to issue the commands. my proxmox host is 'prox-1u'. Add /api2/json at the end for the API
-  pm_api_url = "https://192.168.1.124:8006/api2/json"
+  pm_api_url = "https://${var.proxmox_host}:8006/api2/json"
   # api token id is in the form of: <username>@pam!<tokenId>
   #pm_api_token_id = "blog_example@pam!new_token_id"
   pm_user = var.proxmox_user
