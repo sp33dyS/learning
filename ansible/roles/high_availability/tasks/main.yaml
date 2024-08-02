@@ -8,7 +8,7 @@
     - pve-ha-crm
     - corosync
   when: high_availability == 1
-  register: services
+  notify: Restart pve-ha-lrm, pve-ha-crm, and corosync services
 
 - name: Disable pve-ha-lrm, pve-ha-crm, and corosync services
   systemd:
@@ -19,14 +19,4 @@
     - pve-ha-crm
     - corosync
   when: high_availability == 0
-  register: services
-
-- name: Restart pve-ha-lrm, pve-ha-crm, and corosync services
-  systemd:
-    name: '{{ item }}'
-    state: restarted
-  with_items:
-    - pve-ha-lrm
-    - pve-ha-crm
-    - corosync
-  when: services.changed
+  notify: Restart pve-ha-lrm, pve-ha-crm, and corosync services
