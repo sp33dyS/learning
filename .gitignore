@@ -36,3 +36,6 @@ terraform.rc
 
 # Andible Vault pass file
 ansible/vault_pass_file
+
+# Terraform logs
+terraform-plugin-proxmox.log
