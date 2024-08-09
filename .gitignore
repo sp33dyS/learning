@@ -33,3 +33,6 @@ override.tf.json
 # Ignore CLI configuration files
 .terraformrc
 terraform.rc
+
+# Andible Vault pass file
+ansible/vault_pass_file
