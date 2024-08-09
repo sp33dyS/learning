@@ -2,7 +2,7 @@ terraform {
   required_providers {
     proxmox = {
       source = "telmate/proxmox"
-      version = "3.0.1-rc1"
+      version = "3.0.1-rc3"
     }
   }
 }
@@ -18,6 +18,7 @@ provider "proxmox" {
   #pm_api_token_secret = "9ec8e608-d834-4ce5-91d2-15dd59f9a8c1"
   # leave tls_insecure set to true unless you have your proxmox SSL certificate situation fully sorted out (if you do, you will know)
   pm_tls_insecure = true
+  pm_log_enable = true
 }
 
 # resource is formatted to be "[type]" "[entity_name]" so in this case
