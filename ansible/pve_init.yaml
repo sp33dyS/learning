@@ -8,5 +8,6 @@
     - nag_msg
     - high_availability
     - upgrade
+    - create_users
     - reboot
     

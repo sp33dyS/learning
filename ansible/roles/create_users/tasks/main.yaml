@@ -1,0 +1,18 @@
+---
+- name: Get facts
+  include_vars:
+    file: vault.yaml
+
+- name: Create role for Terraform user
+  shell: pveum role add Terraform --privs "Datastore.AllocateSpace Datastore.Audit Pool.Allocate Sys.Audit Sys.Console Sys.Modify VM.Allocate VM.Audit VM.Clone VM.Config.CDROM VM.Config.Cloudinit VM.Config.CPU VM.Config.Disk VM.Config.HWType VM.Config.Memory VM.Config.Network VM.Config.Options VM.Migrate VM.Monitor VM.PowerMgmt SDN.Use"
+  register: role_add
+  failed_when: "role_add.rc != 255"
+
+- name: Create user for Terraform
+  shell: pveum user add "{{ tf_username }}" --password "--password" --expire 0
+  register: user_add
+  failed_when: "user_add.rc != 2"
+
+- name: Add role to Terraform user
+  shell: pveum aclmod / -user "{{ tf_username }}" -role Terraform
+
