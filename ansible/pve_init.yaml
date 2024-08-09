@@ -8,6 +8,6 @@
     - nag_msg
     - high_availability
     - upgrade
+    - cpu_microcode
     - create_users
     - reboot
-    

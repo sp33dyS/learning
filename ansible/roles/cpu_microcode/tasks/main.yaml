@@ -1,0 +1,36 @@
+---
+- set_fact:
+    intel_microcode_url: "https://ftp.debian.org/debian/pool/non-free-firmware/i/intel-microcode/"
+    amd_microcode_url: "https://ftp.debian.org/debian/pool/non-free-firmware/a/amd64-microcode/"
+
+- name: Detect CPU Vendor
+  shell: lscpu | grep -oP 'Vendor ID:\s*\K\S+'
+  register: cpu_vendor
+
+- name: Set microcode package URL for Intel
+  set_fact:
+    microcode_url: "{{ intel_microcode_url }}"
+  when: cpu_vendor.stdout_lines[0] == "GenuineIntel"
+
+- name: Set microcode package URL for AMD
+  set_fact:
+    microcode_url: "{{ amd_microcode_url }}"
+  when: cpu_vendor.stdout_lines[0] == "AuthenticAMD"
+
+- name: Fail if unsupported CPU vendor
+  fail:
+    msg: "{{ cpu_vendor.stdout_lines[0] }} is not supported."
+  when: cpu_vendor.stdout_lines[0] not in ["GenuineIntel", "AuthenticAMD"]
+
+- name: Get the list of available microcode packages
+  shell: curl -fsSL "{{ microcode_url }}" | grep -o 'href="[^"]*amd64.deb"' | sed 's/href="//;s/"//'
+  register: microcode_list
+
+- name: Fail if no microcode packages found
+  fail:
+    msg: "It appears there were no microcode packages found. Try again later."
+  when: microcode_list.stdout_lines | length == 0
+
+- name: Install microcode package
+  apt:
+    deb: "{{ microcode_url }}{{ microcode_list.stdout_lines[0] }}"
